@@ -2,6 +2,7 @@ import type { Band } from "../types/Band";
 
 interface BandCardProps {
   grupo: Band;
+  onDeleteBand: (id: number) => void;
 }
 
 function BandCard(props: BandCardProps) {
@@ -13,6 +14,11 @@ function BandCard(props: BandCardProps) {
         <a href={props.grupo.enlace} target="_blank" rel="noopener noreferrer">
           Ver en Bandcamp
         </a>
+      </td>
+      <td>
+        <button onClick={() => props.onDeleteBand(props.grupo.id)}>
+          Borrar banda
+        </button>
       </td>
     </tr>
   );

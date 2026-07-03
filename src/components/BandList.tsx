@@ -3,6 +3,7 @@ import BandCard from "./BandCard";
 
 interface BandListProps {
   bandas: Band[];
+  onDeleteBand: (id: number) => void;
 }
 
 function BandList(props: BandListProps) {
@@ -24,7 +25,11 @@ function BandList(props: BandListProps) {
 
         <tbody>
           {props.bandas.map((banda) => (
-            <BandCard key={banda.id} grupo={banda} />
+            <BandCard
+              key={banda.id}
+              grupo={banda}
+              onDeleteBand={props.onDeleteBand}
+            />
           ))}
         </tbody>
       </table>

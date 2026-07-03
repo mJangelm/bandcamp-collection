@@ -31,10 +31,14 @@ function App() {
     setBandas([...bandas, nuevaBanda]);
   }
 
+  function deleteBanda(id: number) {
+    setBandas(bandas.filter((banda) => banda.id !== id));
+  }
+
   return (
     <>
       <Header />
-      <BandList bandas={bandas} />
+      <BandList bandas={bandas} onDeleteBand={deleteBanda} />
       <BandForm onAddBand={addBanda} />
       <Footer />
     </>
