@@ -3,4 +3,5 @@ export interface Band {
   nombre: string;
   genero: string;
   enlace: string;
+  embed: string;
 }

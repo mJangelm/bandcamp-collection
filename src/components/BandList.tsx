@@ -11,6 +11,7 @@ function BandList(props: BandListProps) {
   if (props.bandas.length === 0) {
     return <p>No hay bandas registradas.</p>;
   }
+
   return (
     <>
       <h2>Listado de bandas</h2>
@@ -21,7 +22,9 @@ function BandList(props: BandListProps) {
             <th>Nombre</th>
             <th>Género</th>
             <th>Bandcamp</th>
-            <th>Acciones</th>
+            <th>Preview</th>
+            <th>Editar</th>
+            <th>Borrar</th>
           </tr>
         </thead>
 

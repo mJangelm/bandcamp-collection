@@ -9,25 +9,16 @@ function App() {
   const [bandas, setBandas] = useState<Band[]>([
     {
       id: 0,
-      nombre: "Death",
-      genero: "Death Metal",
+      nombre: "Midnight",
+      genero: "Black n' roll",
       enlace: "https://death.bandcamp.com",
-    },
-    {
-      id: 1,
-      nombre: "Bathory",
-      genero: "Black Metal",
-      enlace: "https://bathory.bandcamp.com",
-    },
-    {
-      id: 2,
-      nombre: "Discharge",
-      genero: "Crust Punk",
-      enlace: "https://discharge.bandcamp.com",
+      embed:
+        "https://bandcamp.com/EmbeddedPlayer/album=3635898980/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/track=1003606430/transparent=true/",
     },
   ]);
 
   const [editingBand, setEditingBand] = useState<Band | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
   function addBanda(nuevaBanda: Band) {
     setBandas([...bandas, nuevaBanda]);
@@ -38,6 +29,7 @@ function App() {
   }
 
   function editBanda(id: number) {
+    cerrarFormulario();
     const banda = bandas.find((banda) => banda.id === id);
 
     if (!banda) {
@@ -60,6 +52,10 @@ function App() {
       }),
     );
   }
+
+  function cerrarFormulario() {
+    setShowForm((prev) => !prev);
+  }
   return (
     <>
       <Header />
@@ -68,11 +64,18 @@ function App() {
         onDeleteBand={deleteBanda}
         onEditBand={editBanda}
       />
-      <BandForm
-        onUpdateBand={updateBanda}
-        onAddBand={addBanda}
-        editingBand={editingBand}
-      />
+      {showForm && (
+        <BandForm
+          onCerrarFormulario={cerrarFormulario}
+          onAddBand={addBanda}
+          onUpdateBand={updateBanda}
+          editingBand={editingBand}
+        />
+      )}
+
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Cerrar formulario" : "Añadir banda"}
+      </button>
       <Footer />
     </>
   );

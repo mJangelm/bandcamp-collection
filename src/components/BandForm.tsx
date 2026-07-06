@@ -5,17 +5,25 @@ interface BandFormProps {
   onAddBand: (band: Band) => void;
   onUpdateBand: (band: Band) => void;
   editingBand: Band | null;
+  onCerrarFormulario: () => void;
 }
 
-function BandForm({ onAddBand, editingBand, onUpdateBand }: BandFormProps) {
+function BandForm({
+  onAddBand,
+  editingBand,
+  onCerrarFormulario,
+  onUpdateBand,
+}: BandFormProps) {
   const [nombre, setNombre] = useState("");
   const [genero, setGenero] = useState("");
   const [enlace, setEnlace] = useState("");
+  const [embed, setEmbed] = useState("");
 
   const [errors, setErrors] = useState<{
     nombre?: string;
     genero?: string;
     enlace?: string;
+    embed?: string;
   }>({});
 
   useEffect(() => {
@@ -26,7 +34,15 @@ function BandForm({ onAddBand, editingBand, onUpdateBand }: BandFormProps) {
     setNombre(editingBand.nombre);
     setGenero(editingBand.genero);
     setEnlace(editingBand.enlace);
+    setEmbed(editingBand.embed);
   }, [editingBand]);
+
+  function extraerSrc(codigo: string): string {
+    const match = codigo.match(/src="([^"]+)"/);
+
+    return match ? match[1] : codigo.trim();
+  }
+
   function handleSubmit() {
     const newErrors: typeof errors = {};
 
@@ -42,37 +58,46 @@ function BandForm({ onAddBand, editingBand, onUpdateBand }: BandFormProps) {
       newErrors.enlace = "El enlace es obligatorio";
     }
 
+    if (!embed.trim()) {
+      newErrors.embed = "El reproductor es obligatorio";
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
+    const embedLimpio = extraerSrc(embed);
+
     if (editingBand) {
       const bandaEdit: Band = {
         id: editingBand.id,
-        nombre: nombre,
-        genero: genero,
-        enlace: enlace,
+        nombre: nombre.trim(),
+        genero: genero.trim(),
+        enlace: enlace.trim(),
+        embed: embedLimpio,
       };
+
       onUpdateBand(bandaEdit);
-      setNombre("");
-      setGenero("");
-      setEnlace("");
-      setErrors({});
+      onCerrarFormulario();
     } else {
       const nuevaBanda: Band = {
         id: Date.now(),
         nombre: nombre.trim(),
         genero: genero.trim(),
         enlace: enlace.trim(),
+        embed: embedLimpio,
       };
 
       onAddBand(nuevaBanda);
-
-      setNombre("");
-      setGenero("");
-      setEnlace("");
-      setErrors({});
+      onCerrarFormulario();
     }
+
+    setNombre("");
+    setGenero("");
+    setEnlace("");
+    setEmbed("");
+    setErrors({});
   }
 
   return (
@@ -127,8 +152,22 @@ function BandForm({ onAddBand, editingBand, onUpdateBand }: BandFormProps) {
 
         <br />
 
+        <div>
+          <label htmlFor="embed">Embed de Bandcamp</label>
+          <br />
+          <textarea
+            id="embed"
+            value={embed}
+            onChange={(e) => setEmbed(e.target.value)}
+            placeholder="https://bandcamp.com/EmbeddedPlayer/..."
+          />
+          {errors.embed && <p style={{ color: "red" }}>{errors.embed}</p>}
+        </div>
+
+        <br />
+
         <button type="submit">
-          {editingBand ? "Guardar cambios" : "Añadir banda"}
+          {editingBand ? "Guardar cambios" : "Añadir"}
         </button>
       </form>
     </>
