@@ -4,6 +4,7 @@ import BandCard from "./BandCard";
 interface BandListProps {
   bandas: Band[];
   onDeleteBand: (id: number) => void;
+  onEditBand: (id: number) => void;
 }
 
 function BandList(props: BandListProps) {
@@ -20,6 +21,7 @@ function BandList(props: BandListProps) {
             <th>Nombre</th>
             <th>Género</th>
             <th>Bandcamp</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
@@ -29,6 +31,7 @@ function BandList(props: BandListProps) {
               key={banda.id}
               grupo={banda}
               onDeleteBand={props.onDeleteBand}
+              onEditBand={props.onEditBand}
             />
           ))}
         </tbody>

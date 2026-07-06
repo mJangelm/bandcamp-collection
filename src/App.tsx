@@ -27,6 +27,8 @@ function App() {
     },
   ]);
 
+  const [editingBand, setEditingBand] = useState<Band | null>(null);
+
   function addBanda(nuevaBanda: Band) {
     setBandas([...bandas, nuevaBanda]);
   }
@@ -35,11 +37,42 @@ function App() {
     setBandas(bandas.filter((banda) => banda.id !== id));
   }
 
+  function editBanda(id: number) {
+    const banda = bandas.find((banda) => banda.id === id);
+
+    if (!banda) {
+      return;
+    }
+
+    console.log("Banda encontrada:", banda);
+    setEditingBand(banda);
+  }
+
+  function updateBanda(bandaEditada: Band) {
+    setBandas(
+      bandas.map((bandaActual) => {
+        if (bandaActual.id === bandaEditada.id) {
+          return bandaEditada;
+        }
+        setEditingBand(null);
+
+        return bandaActual;
+      }),
+    );
+  }
   return (
     <>
       <Header />
-      <BandList bandas={bandas} onDeleteBand={deleteBanda} />
-      <BandForm onAddBand={addBanda} />
+      <BandList
+        bandas={bandas}
+        onDeleteBand={deleteBanda}
+        onEditBand={editBanda}
+      />
+      <BandForm
+        onUpdateBand={updateBanda}
+        onAddBand={addBanda}
+        editingBand={editingBand}
+      />
       <Footer />
     </>
   );

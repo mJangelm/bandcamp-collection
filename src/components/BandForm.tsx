@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Band } from "../types/Band";
 
 interface BandFormProps {
   onAddBand: (band: Band) => void;
+  onUpdateBand: (band: Band) => void;
+  editingBand: Band | null;
 }
 
-function BandForm({ onAddBand }: BandFormProps) {
+function BandForm({ onAddBand, editingBand, onUpdateBand }: BandFormProps) {
   const [nombre, setNombre] = useState("");
   const [genero, setGenero] = useState("");
   const [enlace, setEnlace] = useState("");
@@ -16,6 +18,15 @@ function BandForm({ onAddBand }: BandFormProps) {
     enlace?: string;
   }>({});
 
+  useEffect(() => {
+    if (!editingBand) {
+      return;
+    }
+
+    setNombre(editingBand.nombre);
+    setGenero(editingBand.genero);
+    setEnlace(editingBand.enlace);
+  }, [editingBand]);
   function handleSubmit() {
     const newErrors: typeof errors = {};
 
@@ -35,25 +46,38 @@ function BandForm({ onAddBand }: BandFormProps) {
       setErrors(newErrors);
       return;
     }
+    if (editingBand) {
+      const bandaEdit: Band = {
+        id: editingBand.id,
+        nombre: nombre,
+        genero: genero,
+        enlace: enlace,
+      };
+      onUpdateBand(bandaEdit);
+      setNombre("");
+      setGenero("");
+      setEnlace("");
+      setErrors({});
+    } else {
+      const nuevaBanda: Band = {
+        id: Date.now(),
+        nombre: nombre.trim(),
+        genero: genero.trim(),
+        enlace: enlace.trim(),
+      };
 
-    const nuevaBanda: Band = {
-      id: Date.now(),
-      nombre: nombre.trim(),
-      genero: genero.trim(),
-      enlace: enlace.trim(),
-    };
+      onAddBand(nuevaBanda);
 
-    onAddBand(nuevaBanda);
-
-    setNombre("");
-    setGenero("");
-    setEnlace("");
-    setErrors({});
+      setNombre("");
+      setGenero("");
+      setEnlace("");
+      setErrors({});
+    }
   }
 
   return (
     <>
-      <h2>Añadir banda</h2>
+      <h2>{editingBand ? "Editar banda" : "Añadir banda"}</h2>
 
       <form
         onSubmit={(e) => {
@@ -103,7 +127,9 @@ function BandForm({ onAddBand }: BandFormProps) {
 
         <br />
 
-        <button type="submit">Añadir banda</button>
+        <button type="submit">
+          {editingBand ? "Guardar cambios" : "Añadir banda"}
+        </button>
       </form>
     </>
   );
