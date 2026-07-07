@@ -61,7 +61,55 @@ function App() {
       }),
     );
   }
+  function importarExcel(event: React.ChangeEvent<HTMLInputElement>) {
+    // Cogemos el primer archivo seleccionado por el usuario.
+    // "files" devuelve una lista de archivos, por eso usamos [0].
+    const archivo = event.target.files?.[0];
 
+    // Si no hay archivo seleccionado, salimos de la función.
+    if (!archivo) {
+      return;
+    }
+
+    // FileReader es una API del navegador que permite leer archivos
+    // que el usuario ha seleccionado desde su ordenador.
+    const lector = new FileReader();
+
+    // Esta función se ejecuta automáticamente cuando FileReader
+    // termina de leer el archivo.
+    lector.onload = (e) => {
+      // Aquí obtenemos los datos del Excel ya leído.
+      // result puede ser varios tipos, por eso comprobamos que exista.
+      const datos = e.target?.result;
+
+      if (!datos) {
+        return;
+      }
+
+      // XLSX interpreta los datos binarios del archivo Excel
+      // y crea un objeto libro (Workbook) con sus hojas.
+      const libro = XLSX.read(datos, { type: "array" });
+
+      // Un Excel puede tener varias hojas.
+      // Aquí cogemos el nombre de la primera hoja.
+      const nombreHoja = libro.SheetNames[0];
+
+      // Accedemos al contenido de esa hoja.
+      const hoja = libro.Sheets[nombreHoja];
+
+      // Convertimos las filas del Excel en objetos JavaScript.
+      // <Band> indica a TypeScript que esperamos objetos con la estructura Band.
+      const bandasImportadas = XLSX.utils.sheet_to_json<Band>(hoja);
+
+      // Sustituimos el estado actual de React por las bandas importadas.
+      // La interfaz se actualizará automáticamente.
+      setBandas(bandasImportadas);
+    };
+
+    // Iniciamos la lectura del archivo.
+    // readAsArrayBuffer convierte el Excel en datos que XLSX puede entender.
+    lector.readAsArrayBuffer(archivo);
+  }
   function exportarExcel() {
     const hoja = XLSX.utils.json_to_sheet(bandas);
 
@@ -107,6 +155,7 @@ function App() {
           {showForm ? "×" : "+"}
         </button>
         <button onClick={exportarExcel}>📥 Exportar colección</button>
+        <input type="file" accept=".xlsx,.xls" onChange={importarExcel} />
       </main>
 
       <Footer />
