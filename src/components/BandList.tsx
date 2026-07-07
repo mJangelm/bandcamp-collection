@@ -9,37 +9,46 @@ interface BandListProps {
 
 function BandList(props: BandListProps) {
   if (props.bandas.length === 0) {
-    return <p>No hay bandas registradas.</p>;
+    return (
+      <div className="alert alert-secondary mt-4">
+        No hay bandas registradas.
+      </div>
+    );
   }
 
   return (
-    <>
-      <h2>Listado de bandas</h2>
+    <div className="card shadow mt-4">
+      <div className="card-header">
+        <h2 className="mb-0">Listado de bandas</h2>
+      </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Género</th>
-            <th>Bandcamp</th>
-            <th>Preview</th>
-            <th>Editar</th>
-            <th>Borrar</th>
-          </tr>
-        </thead>
+      <div className="card-body">
+        <div className="table-responsive">
+          <table className="table table-dark table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Género</th>
+                <th>Bandcamp</th>
+                <th>Preview</th>
+                <th className="text-center">Acciones</th>
+              </tr>
+            </thead>
 
-        <tbody>
-          {props.bandas.map((banda) => (
-            <BandCard
-              key={banda.id}
-              grupo={banda}
-              onDeleteBand={props.onDeleteBand}
-              onEditBand={props.onEditBand}
-            />
-          ))}
-        </tbody>
-      </table>
-    </>
+            <tbody>
+              {props.bandas.map((banda) => (
+                <BandCard
+                  key={banda.id}
+                  grupo={banda}
+                  onDeleteBand={props.onDeleteBand}
+                  onEditBand={props.onEditBand}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }
 

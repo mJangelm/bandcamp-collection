@@ -1,0 +1,28 @@
+/* Reset básico */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #1b1b1b;
+  color: #f5f5f5;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Enlaces */
+
+a {
+  text-decoration: none;
+}
+
+/* Iframes */
+
+iframe {
+  border: none;
+}

@@ -13,7 +13,15 @@ function App() {
       genero: "Black n' roll",
       enlace: "https://death.bandcamp.com",
       embed:
-        "https://bandcamp.com/EmbeddedPlayer/album=3635898980/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/track=1003606430/transparent=true/",
+        "https://bandcamp.com/EmbeddedPlayer/album=3635898980/size=small/bgcol=ffffff/linkcol=0687f5/tracklist=false/track=1003606430/transparent=true/",
+    },
+    {
+      id: 1,
+      nombre: "Turnstile",
+      genero: "Hc punk",
+      enlace: "https://turnstilehc.bandcamp.com/album/nonstop-feeling",
+      embed:
+        "https://bandcamp.com/EmbeddedPlayer/album=2526813997/size=small/bgcol=ffffff/linkcol=0687f5/tracklist=false/track=3969365675/transparent=true/",
     },
   ]);
 
@@ -59,23 +67,36 @@ function App() {
   return (
     <>
       <Header />
-      <BandList
-        bandas={bandas}
-        onDeleteBand={deleteBanda}
-        onEditBand={editBanda}
-      />
-      {showForm && (
-        <BandForm
-          onCerrarFormulario={cerrarFormulario}
-          onAddBand={addBanda}
-          onUpdateBand={updateBanda}
-          editingBand={editingBand}
+      <main className="container">
+        <BandList
+          bandas={bandas}
+          onDeleteBand={deleteBanda}
+          onEditBand={editBanda}
         />
-      )}
+        {showForm && (
+          <BandForm
+            onCerrarFormulario={cerrarFormulario}
+            onAddBand={addBanda}
+            onUpdateBand={updateBanda}
+            editingBand={editingBand}
+          />
+        )}
 
-      <button onClick={() => setShowForm(!showForm)}>
-        {showForm ? "Cerrar formulario" : "Añadir banda"}
-      </button>
+        <button
+          className="btn btn-danger rounded-circle position-fixed"
+          style={{
+            bottom: "30px",
+            left: "30px",
+            width: "65px",
+            height: "65px",
+            fontSize: "30px",
+          }}
+          onClick={cerrarFormulario}
+        >
+          {showForm ? "×" : "+"}
+        </button>
+      </main>
+
       <Footer />
     </>
   );
