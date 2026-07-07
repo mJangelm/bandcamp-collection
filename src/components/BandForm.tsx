@@ -169,6 +169,7 @@ function BandForm({
         <button type="submit">
           {editingBand ? "Guardar cambios" : "Añadir"}
         </button>
+        <button onClick={() => onCerrarFormulario()}>Cancelar</button>
       </form>
     </>
   );

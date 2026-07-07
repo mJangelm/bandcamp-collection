@@ -4,7 +4,8 @@ import BandList from "./components/BandList";
 import BandForm from "./components/BandForm";
 import { useState } from "react";
 import type { Band } from "./types/Band";
-
+import Modal from "./components/Modal";
+import * as XLSX from "xlsx";
 function App() {
   const [bandas, setBandas] = useState<Band[]>([
     {
@@ -61,6 +62,16 @@ function App() {
     );
   }
 
+  function exportarExcel() {
+    const hoja = XLSX.utils.json_to_sheet(bandas);
+
+    const libro = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(libro, hoja, "Bandas");
+
+    XLSX.writeFile(libro, "bandcamp-collection.xlsx");
+  }
+
   function cerrarFormulario() {
     setShowForm((prev) => !prev);
   }
@@ -73,14 +84,14 @@ function App() {
           onDeleteBand={deleteBanda}
           onEditBand={editBanda}
         />
-        {showForm && (
+        <Modal isOpen={showForm} onClose={cerrarFormulario}>
           <BandForm
             onCerrarFormulario={cerrarFormulario}
             onAddBand={addBanda}
             onUpdateBand={updateBanda}
             editingBand={editingBand}
           />
-        )}
+        </Modal>
 
         <button
           className="btn btn-danger rounded-circle position-fixed"
@@ -95,6 +106,7 @@ function App() {
         >
           {showForm ? "×" : "+"}
         </button>
+        <button onClick={exportarExcel}>📥 Exportar colección</button>
       </main>
 
       <Footer />
